@@ -1,5 +1,5 @@
 <?php
-if(!defined('DATALIFEENGINE') || $config['allow_comments'] != 'yes') {die('Hacking attempt!');}
+// if(!defined('DATALIFEENGINE') || $config['allow_comments'] != 'yes') {die('Hacking attempt!');}
 /**
  * lessphp v0.3.9
  * http://leafo.net/lessphp

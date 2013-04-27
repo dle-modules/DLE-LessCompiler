@@ -13,7 +13,7 @@
  * ===============================================================
  * Файл: less.php
  * ---------------------------------------------------------------
- * Версия: 1.0.0 (27.04.2013)
+ * Версия: 1.1.0 (27.04.2013)
  * ===============================================================
  * 
  * Использование: 
@@ -22,8 +22,8 @@
  * В начале main.tpl прописать {include file="engine/modules/less/less.php"}
  * По умолчанию подключается файл main.less из папки css текущего шаблона сайта
  * туда же записывается одноимённый css-файл 
- * Для указания собственных файлов и показа времени выполнения скрипта пишем примерно так:
- * {include file="engine/modules/less/less.php?&inputFile=/styles/file.less&outputFile=/css/style.css&showstat=y"}
+ * Для указания собственных файлов и показа времени выполнения скрипта и отключения компесии css пишем примерно так:
+ * {include file="engine/modules/less/less.php?&inputFile=/styles/file.less&outputFile=/css/style.css&showstat=y&nocompress=y"}
  * 
  */
 
@@ -33,8 +33,9 @@ if(!defined('DATALIFEENGINE') || $config['allow_comments'] != 'yes') {die('Hacki
 	/**
 	 * Переменные строки подключения:
 	 * inputFile - входной файл .less
-	 * outputFile - итоговый css-файл (по умолчанию имеет то же имя, что и исходный)
+	 * outputFile - итоговый css-файл (по умолчанию имеет то же имя, что и исходный).
 	 * showstat - показывать время работы модуля (показывается только для админа).
+	 * nocompress - отключает сжатие css-файла.
 	 */
 	if(!is_string($inputFile)) $inputFile = '/css/main.less';
 	if(!is_string($outputFile)) $outputFile = str_ireplace('.less', '.css', $inputFile);
@@ -63,6 +64,10 @@ if(!defined('DATALIFEENGINE') || $config['allow_comments'] != 'yes') {die('Hacki
 		// Подключаем класс для компиляции less 
 		require "lessphp.class.php";
 		$less = new lessc;
+		if (!$nocompress) {
+			$less->setFormatter('compressed');
+		}
+		
 		$newCache = $less->cachedCompile($cache);
 
 		if (!is_array($cache) || $newCache["updated"] > $cache["updated"]) {
