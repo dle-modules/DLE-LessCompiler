@@ -38,5 +38,5 @@ LessForDle - модуль для связки класса phpless с CMS DataLi
  ```
  * Для отключения сжатия пишем так:
  ```
- {include file="engine/modules/less/less.php?&nocompress=y"}
+ {include file="engine/modules/less/less.php?&normal=y"}
  ```

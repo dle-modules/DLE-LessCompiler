@@ -13,7 +13,7 @@
  * ===============================================================
  * Файл: less.php
  * ---------------------------------------------------------------
- * Версия: 1.1.0 (27.04.2013)
+ * Версия: 1.2.0 (28.04.2013)
  * ===============================================================
  * 
  * Использование: 
@@ -23,7 +23,7 @@
  * По умолчанию подключается файл main.less из папки css текущего шаблона сайта
  * туда же записывается одноимённый css-файл 
  * Для указания собственных файлов и показа времени выполнения скрипта и отключения компесии css пишем примерно так:
- * {include file="engine/modules/less/less.php?&inputFile=/styles/file.less&outputFile=/css/style.css&showstat=y&nocompress=y"}
+ * {include file="engine/modules/less/less.php?&inputFile=/styles/file.less&outputFile=/css/style.css&showstat=y&normal=y"}
  * 
  */
 
@@ -35,10 +35,11 @@ if(!defined('DATALIFEENGINE') || $config['allow_comments'] != 'yes') {die('Hacki
 	 * inputFile - входной файл .less
 	 * outputFile - итоговый css-файл (по умолчанию имеет то же имя, что и исходный).
 	 * showstat - показывать время работы модуля (показывается только для админа).
-	 * nocompress - отключает сжатие css-файла.
+	 * normal - отключает сжатие css-файла.
 	 */
-	if(!is_string($inputFile)) $inputFile = '/css/main.less';
+	if(!is_string($inputFile))  $inputFile = '/css/main.less';
 	if(!is_string($outputFile)) $outputFile = str_ireplace('.less', '.css', $inputFile);
+	if(!is_string($normal))        $normal = false;
 
 	if($showstat && $member_id['user_id'] == 1) {
 		$start = microtime(true);
@@ -49,9 +50,10 @@ if(!defined('DATALIFEENGINE') || $config['allow_comments'] != 'yes') {die('Hacki
 	 * функция взята из документации к классу.
 	 * @param string $inpFile - входной файл (в котором могут быть и импортированные файлы)
 	 * @param string $outFile - выходной файл
+	 * @param string $nocompress - отключает сжатие выходного файла
 	 * @return file
 	 */
-	function autoCompileLess($inpFile, $outFile) {
+	function autoCompileLess($inpFile, $outFile, $nocompress = false) {
 
 		$cacheFile = $inpFile.".cache";
 
@@ -64,7 +66,13 @@ if(!defined('DATALIFEENGINE') || $config['allow_comments'] != 'yes') {die('Hacki
 		// Подключаем класс для компиляции less 
 		require "lessphp.class.php";
 		$less = new lessc;
-		if (!$nocompress) {
+		if ($nocompress) {
+			// Если запрещено сжатие - форматируем по нормальному с табами вместо пробелов.
+			$formatter = new lessc_formatter_classic;
+	        $formatter->indentChar = "\t";
+	        $less->setFormatter($formatter);
+		} else {
+			// Иначе сжимаем всё в одну строку.
 			$less->setFormatter('compressed');
 		}
 		
@@ -78,7 +86,7 @@ if(!defined('DATALIFEENGINE') || $config['allow_comments'] != 'yes') {die('Hacki
 
 	// Выполняем функцию компиляции
 	try {
-		autoCompileLess(TEMPLATE_DIR.$inputFile, TEMPLATE_DIR.$outputFile);
+		autoCompileLess(TEMPLATE_DIR.$inputFile, TEMPLATE_DIR.$outputFile, $normal);
 	} catch (exception $e) {
 		// Если что-то пошло не так - скажем об этом пользователю.
 		echo '<div style="text-align: center; background: #fff; color: red; padding: 5px;">LessForDle error: '.$e->getMessage().'</div>';
