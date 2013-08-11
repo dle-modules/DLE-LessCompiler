@@ -21,7 +21,7 @@ if($member_id['user_group'] != 1) {
  * ===============================================================
  * Файл: less.php
  * ---------------------------------------------------------------
- * Версия: 2.0.0 (13.07.2013)
+ * Версия: 2.1.0 (11.08.2013)
  * ===============================================================
  * 
  * Использование: 
@@ -30,8 +30,8 @@ if($member_id['user_group'] != 1) {
  * В начале main.tpl прописать {include file="engine/modules/less/less.php"}
  * По умолчанию подключается файл main.less из папки текущего шаблона сайта
  * туда же записывается одноимённый css-файл 
- * Полная строка подключения выглядит вот так:
- * {include file="engine/modules/less/less.php?lessLog=y&lessFileSize=25&lessLogFile=logfile&inputFile=/css/file1.less&outputFile=/css1/styles.css&normal=y&alertError=y"}
+ * Полная строка подключения со всеми перемеными выглядит вот так:
+ * {include file="engine/modules/less/less.php?lessLog=y&lessFileSize=25&lessLogFile=logfile&inputFile=/css/file1.less&outputFile=/css1/styles.css&normal=y&alertError=y&copyText@author: Юзернейм"}
  *  
  * Настройки компиляции, они же и возможности ))
  * переменные строки подключения с параметрами:
@@ -43,6 +43,7 @@ if($member_id['user_group'] != 1) {
  * &outputFile=/css1/styles.css		// Итоговый CSS-файл
  * &normal=y						// Отключение сжатия выходящего файла.
  * &alertError=y					// Показ ошибок компиляции через js-alert (иногда так удобнее, чем вверху страницы)
+ * &copyText=@author: Юзернейм		// Текст, который будет записан в начало файла CSS вместе со статистикой 
  * 
  * значения по умолчанию можно увидеть ниже 
  */
@@ -55,6 +56,8 @@ $inputFile		= !empty($inputFile)	? TEMPLATE_DIR.$inputFile : TEMPLATE_DIR."/main
 $outputFile		= !empty($outputFile)	? TEMPLATE_DIR.$outputFile : str_ireplace('.less', '.css', $inputFile);
 $normal			= !empty($lessLog)		? true : false;
 $alertError		= !empty($lessLog) 		? true : false;
+
+$copyText 		= !empty($copyText) 	? $copyText : '';
 
 /**
  * Конец настроек
@@ -69,7 +72,7 @@ if($lessLog) {
 
 // Выполняем функцию компиляции
 try {
-	autoCompileLess($inputFile, $outputFile, $normal);
+	autoCompileLess($inputFile, $outputFile, $normal, $copyText);
 } catch (exception $e) {
 	// Если что-то пошло не так - скажем об этом пользователю способом, указанным в настройках и запишем в лог.
 	$logError = str_replace($_SERVER['DOCUMENT_ROOT'], '', $e->getMessage());
@@ -188,7 +191,7 @@ if($lessLog) {
 	 * @param string $nocompress - отключает сжатие выходного файла
 	 * @return file
 	 */
-	function autoCompileLess($inpFile, $outFile, $nocompress = false) {
+	function autoCompileLess($inpFile, $outFile, $nocompress = false, $copy) {
 
 		$cacheFile = $inpFile.".cache";
 
@@ -211,11 +214,29 @@ if($lessLog) {
 			$less->setFormatter('compressed');
 		}
 		
+		// Массив с данными разультата компиляции
 		$newCache = $less->cachedCompile($cache);
+
+		// Выдёргиваем имена импортируемых файлов
+		$sourceFiles = array();
+		foreach ($cache["files"] as $key => $source) {
+			$sourceFiles[] = basename($key);
+		}
+
+		// Добавляем копирайты и информацию по файлам в начало.
+		$copy = '
+/* ==========================================================================
+   @outputFile: '.basename($outFile).'
+   @inputFiles: '.implode(', ',$sourceFiles).'
+   @date: '.date('Y-m-d H:i:s').'
+   '.$copy.' */
+/* ========================================================================== */
+
+';
 
 		if (!is_array($cache) || $newCache["updated"] > $cache["updated"]) {
 			file_put_contents($cacheFile, serialize($newCache));
-			file_put_contents($outFile, $newCache['compiled']);
+			file_put_contents($outFile, $copy.$newCache['compiled']);
 		}
 	}
 
