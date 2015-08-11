@@ -1,6 +1,6 @@
 # DLE-LessCompiler
 ![version](https://img.shields.io/badge/version-3.0.0-red.svg?style=flat-square "Version")
-![DLE](https://img.shields.io/badge/DLE-8.x-10.x-green.svg?style=flat-square "DLE Version")
+![DLE](https://img.shields.io/badge/DLE-8.x--10.x-green.svg?style=flat-square "DLE Version")
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/dle-modules/DLE-LessCompiler/blob/master/LICENSE)
 
 DLE-LessCompiler — LESS компилятор для CMS DataLife Engine (8.x - 10.x)
