@@ -1,0 +1,28 @@
+// @see http://pafnuty.name/less-rules.html
+
+
+// Эти переменные выносятся в отдельные файлы
+@black: #000; // black
+@green: #0f0; // green
+@red: #f00; // red
+
+// Такой миксин не попадает в результирующий CSS-файл
+.border-radius(@radius: 5px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+	border-radius: @radius;
+}
+
+// А сам код становится короче
+.class {
+	color: @red;
+	.border-radius(); // По умолчанию и так 5px. Можно не назначать.
+}
+.class2 {
+	color: @green;
+	.border-radius(10px);
+}
+.class3 {
+	color: @black;
+	.border-radius(5px 0px 10px 5px);
+}
