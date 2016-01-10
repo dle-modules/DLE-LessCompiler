@@ -7,6 +7,7 @@
 # Кроме папок и файлов модуля
 !/engine/modules/less/
 !/templates/Default/css/
+/templates/Default/css/main.css
 !/templates/Default/less/
 !/README.md
 !/LICENSE

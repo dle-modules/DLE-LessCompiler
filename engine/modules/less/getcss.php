@@ -9,8 +9,13 @@ twitter: https://twitter.com/pafnuty_name
 google+: http://gplus.to/pafnuty
 email:   pafnuty10@gmail.com
 =============================================================================
-Версия: 3.0.0 (11.08.2015)
+Версия: 3.1.0 (10.01.2016)
 =============================================================================
+ */
+
+/**
+ * @global array $member_id
+ * @global array $config
  */
 
 if (!defined('DATALIFEENGINE')) {
@@ -34,12 +39,11 @@ $compress = !isset($compress) ? false : true;
 // Генерировать  sourceMap
 $sourceMap = !isset($sourceMap) ? false : true;
 
-
 // Путь к корню сайта
-$rootFolder = ROOT_DIR; 
+$rootFolder = ROOT_DIR;
 
 // Превращаем имена файлов в массив
-$fileNames  = explode(',', $files);
+$fileNames = explode(',', $files);
 
 // Подключаем класс-обёртку компилятора
 require_once 'compile.php';
@@ -47,7 +51,7 @@ require_once 'compile.php';
 // Компилим в соответсвии с параметрами
 $compile = new dleLessCompiler($rootFolder, $localSpaceFolder, $fileNames, $outputPath, $compress, $sourceMap);
 // На выходе получаем массив
-$file    = $compile->compile();
+$file = $compile->compile();
 
 // Если в массиве есть ошибка - значит компиляция не прошла, и нужно об этом сообщить
 if ($file['error']) {
