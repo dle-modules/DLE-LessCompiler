@@ -1,5 +1,5 @@
 # DLE-LessCompiler
-![version](https://img.shields.io/badge/version-3.0.0-red.svg?style=flat-square "Version")
+![version](https://img.shields.io/badge/version-3.1.0-red.svg?style=flat-square "Version")
 ![DLE](https://img.shields.io/badge/DLE-8.x--10.x-green.svg?style=flat-square "DLE Version")
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/dle-modules/DLE-LessCompiler/blob/master/LICENSE)
 
@@ -24,7 +24,7 @@ DLE-LessCompiler — LESS компилятор для CMS DataLife Engine (8.x -
 
 ## Установка
 - Загрузить содержимое папки **upload** в корень сайта.
-- В начале main.tpl прописать `{include file="engine/modules/less/getscc.php"}`
+- В начале main.tpl прописать `{include file="engine/modules/less/getcss.php"}`
 - По умолчанию подключается файл main.less из папки **less** текущего шаблона сайта, а в папку **css** текущего шаблона записывается одноимённый css-файл.
 
 ## Настройка

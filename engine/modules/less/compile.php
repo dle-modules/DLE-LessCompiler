@@ -11,9 +11,7 @@ email:   pafnuty10@gmail.com
 =============================================================================
  */
 
-require_once 'Less/Autoloader.php';
-
-Less_Autoloader::register();
+require_once 'Less/Less.php';
 
 /**
  *
@@ -22,7 +20,7 @@ class dleLessCompiler {
 
 	public $rootFolder       = false;
 	public $localSpaceFolder = '/templates/Default/less/';
-	public $fileNames        = array('bootstrap');
+	public $fileNames        = ['bootstrap'];
 	public $compress         = false;
 	public $sourceMap        = false;
 
@@ -53,7 +51,7 @@ class dleLessCompiler {
 	 * @return array
 	 */
 	public function getFileList($lessFiles) {
-		$arFiles = array();
+		$arFiles = [];
 		foreach ($lessFiles as $key => $lessFile) {
 			$arFiles[$this->config->rootFolder . $this->config->localSpaceFolder . '/less/' . $lessFile . '.less'] = $this->config->rootFolder . $this->config->localSpaceFolder . $this->config->outputPath;
 		}
@@ -77,10 +75,10 @@ class dleLessCompiler {
 			$error    = $e->getMessage();
 		}
 
-		$arReturn = array(
+		$arReturn = [
 			'filePath' => $filePath,
 			'error'    => $error,
-		);
+		];
 
 		return $arReturn;
 	}
@@ -89,7 +87,7 @@ class dleLessCompiler {
 	 * @return array
 	 */
 	public function setOptions() {
-		$arOptions                      = array();
+		$arOptions                      = [];
 		$arOptions['cache_dir']         = $this->config->rootFolder . $this->config->localSpaceFolder . '/less_cache';
 		$arOptions['compress']          = $this->config->compress;
 		$arOptions['sourceMap']         = $this->config->sourceMap;
@@ -99,6 +97,7 @@ class dleLessCompiler {
 		$arOptions['sourceMapBasepath'] = $this->config->rootFolder;
 		$arOptions['output']            = $this->config->rootFolder . $this->config->localSpaceFolder . $this->config->outputPath . $this->config->fileNames[0] . '.css';
 		$arOptions['relativeUrls']      = false;
+		$arOptions['indentation']       = "\t";
 
 		return $arOptions;
 	}
